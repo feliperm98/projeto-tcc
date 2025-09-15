@@ -1,0 +1,76 @@
+.recipeCard {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    font-family: Polysans, sans-serif;
+    color: black; 
+    background-color: white;
+}
+
+.recipeName {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 30px;
+}
+
+.recipeImage{
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
+
+.recipeDetails {
+    display: flex;
+    justify-content: space-between;
+}
+
+.recipeInstructions {
+    padding: 0px;
+    border-radius: 5px;
+}
+
+.recipeInstructions ol {
+    margin-left: 0px;
+}
+
+.recipeInstructions li {
+    margin: 10px 0px;
+}
+
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background: #228B22;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}

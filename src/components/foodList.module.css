@@ -1,0 +1,7 @@
+.foodListContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Or space-around, space-between */
+    gap: 20px; /* Adds space between items */
+    padding: 20px;
+}

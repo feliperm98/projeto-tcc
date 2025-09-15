@@ -1,0 +1,32 @@
+.searchContainer {
+    width: 300px;
+    margin: 20px auto;
+    position: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center children horizontally */
+    gap: 15px; /* Add space between all elements */
+}
+
+.input {
+    border: none;
+    border-bottom: 2px solid #ccc;
+    padding: 10px 20px;
+    width: 100%;
+    flex-grow: 1; /* Allow input to take up available space */
+    box-sizing: border-box; /* Important for consistent sizing */
+    border-radius: 4px; /* Apply radius to all corners */
+    border-right: none; /* Remove border between input and button */
+    outline: none;
+    margin: 5px;
+}
+
+.button {
+    background-color: #228B22;
+    color: white;
+    border: 1px solid #228B22;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px; /* Apply radius to all corners */
+    width: 100%; /* Set a width for the button */
+    margin-left: 5px;
+}
