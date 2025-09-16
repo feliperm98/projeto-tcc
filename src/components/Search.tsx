@@ -4,19 +4,45 @@ import styles from "./search.module.css";
 const URL = "https://api.spoonacular.com/recipes/complexSearch"
 const apiKey = "c1ff7152323a4667a464a6b0132defa4";
 
+const intoleranceOptions = [
+    { value: 'dairy', label: 'Dairy' },
+    { value: 'egg', label: 'Egg' },
+    { value: 'gluten', label: 'Gluten' },
+    { value: 'grain', label: 'Grain' },
+    { value: 'peanut', label: 'Peanut' },
+    { value: 'seafood', label: 'Seafood' },
+    { value: 'sesame', label: 'Sesame' },
+    { value: 'shellfish', label: 'Shellfish' },
+    { value: 'soy', label: 'Soy' },
+    { value: 'sulfite', label: 'Sulfite' },
+    { value: 'tree-nut', label: 'Tree Nut' },
+    { value: 'wheat', label: 'Wheat' }
+];
+
 export default function Search({ foodData, setFoodData }: { foodData: any; setFoodData: any }) {
 
     const [searchParams, setSearchParams] = useState({
         query: "",
         cuisine: "",
         diet: "",
-        intolerances: "",
+        intolerances: [] as string[],
     });
 
     // 2. Generic handler to update the state object
     function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         const { name, value } = e.target;
         setSearchParams({ ...searchParams, [name]: value });
+    
+    }
+
+    function handleCheckboxChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const { value, checked } = e.target;
+        setSearchParams(prevParams => {
+            const newIntolerances = checked
+                ? [...prevParams.intolerances, value] // Add to array if checked
+                : prevParams.intolerances.filter(item => item !== value); // Remove if unchecked
+            return { ...prevParams, intolerances: newIntolerances };
+        });
     }
 
     async function searchRecipe() {
@@ -29,7 +55,9 @@ export default function Search({ foodData, setFoodData }: { foodData: any; setFo
         if (searchParams.query) params.append("query", searchParams.query);
         if (searchParams.cuisine) params.append("cuisine", searchParams.cuisine);
         if (searchParams.diet) params.append("diet", searchParams.diet);
-        if (searchParams.intolerances) params.append("intolerances", searchParams.intolerances);
+        if (searchParams.intolerances.length > 0) {
+            params.append("intolerances", searchParams.intolerances.join(","));
+        }
 
         const res = await fetch(`${URL}?${params.toString()}`);
         const data = await res.json();
@@ -65,21 +93,24 @@ export default function Search({ foodData, setFoodData }: { foodData: any; setFo
                 <option value="pescetarian">Pescetarian</option>
             </select>
 
-            <select className={styles.input} name="intolerances" value={searchParams.intolerances} onChange={handleChange}>
-                <option value="">Select Intolerance</option>
-                <option value="eairy">Dairy</option>
-                <option value="egg">Egg</option>
-                <option value="gluten">Gluten</option>
-                <option value="grain">Grain</option>
-                <option value="peanut">Peanut</option>
-                <option value="seafood">Seafood</option>
-                <option value="sesame">Sesame</option>
-                <option value="shellfish">Shellfish</option>
-                <option value="soy">Soy</option>
-                <option value="sulfite">Sultite</option>
-                <option value="tree-nut">Tree Nut</option>
-                <option value="wheat">Wheat</option>
-            </select>
+            <div className={styles.checkboxContainer}>
+                <h4 className={styles.checkboxTitle}>Intolerances</h4>
+                <div className={styles.checkboxGrid}>
+                    {intoleranceOptions.map(option => (
+                        <div key={option.value} className={styles.checkboxItem}>
+                            <input
+                                type="checkbox"
+                                id={option.value}
+                                value={option.value}
+                                checked={searchParams.intolerances.includes(option.value)}
+                                onChange={handleCheckboxChange}
+                            />
+                            <label htmlFor={option.value}>{option.label}</label>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
 
             <button className={styles.button} onClick={searchRecipe}>
                 Search

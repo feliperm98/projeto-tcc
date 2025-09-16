@@ -8,3 +8,18 @@
     box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.5);
     background-color: #228B22;
 }
+
+.navLink {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: normal;
+    margin-left: 20px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.navLink:hover {
+    background-color: #2E8B57;
+}

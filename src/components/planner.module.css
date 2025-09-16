@@ -1,0 +1,129 @@
+.plannerContainer {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Polysans, sans-serif;
+}
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.input {
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    width: 100%;
+    max-width: 300px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    outline: none;
+}
+
+.button {
+    background-color: #228B22;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #2E8B57;
+}
+
+.mealPlanContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.dayColumn {
+    background-color: #228B22;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dayColumn h2 {
+    text-align: center;
+    color: #333;
+    margin-top: 0;
+    color: white;
+}
+
+.meals {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.mealCard {
+    background-color: white;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.viewButton {
+    background-color: #2E8B57;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 5px;
+    width: 100%;
+}
+
+.viewButton:hover {
+    background-color: #228B22;
+}
+
+.mealCard h3 {
+    font-size: 1em;
+    margin: 0 0 5px 0;
+}
+
+.mealCard p {
+    font-size: 0.9em;
+    margin: 0;
+    color: #666;
+}
+
+.mealCard a {
+    color: #228B22;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.nutrients {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+    color: white;
+}
+
+.nutrients h4 {
+    margin: 0 0 5px 0;
+}
+
+.nutrients p {
+    margin: 2px 0;
+    font-size: 0.9em;
+}

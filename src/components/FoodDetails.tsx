@@ -41,9 +41,6 @@ export default function FoodDetails({foodId, setFoodId}: {foodId: any, setFoodId
                 <strong>⏱️ {food.readyInMinutes} Minutes</strong>
             </span>
             <span>
-                <strong>🍽️ Servings: {food.servings}</strong>
-            </span>
-            <span>
                 <strong>{food.vegetarian ? "Vegetarian" : "Non-Vegetarian"}</strong>
             </span>
             <span>

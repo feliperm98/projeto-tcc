@@ -29,4 +29,38 @@
     border-radius: 4px; /* Apply radius to all corners */
     width: 100%; /* Set a width for the button */
     margin-left: 5px;
+    margin-top: 10px;
+}
+
+checkboxContainer {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 15px;
+    background-color: #fff;
+}
+
+.checkboxTitle {
+    margin: 5px 10px 10px 100px;
+    font-size: 1em;
+    color: #333;
+}
+
+.checkboxGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Creates a 2-column layout */
+    gap: 8px;
+}
+
+.checkboxItem {
+    display: flex;
+    align-items: center;
+}
+
+.checkboxItem input {
+    margin-right: 8px;
+}
+
+.checkboxItem label {
+    font-size: 0.9em;
 }
