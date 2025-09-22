@@ -11,7 +11,7 @@ export default function FoodItem({food, setFoodId}: {food: any, setFoodId: any})
                 onClick={()=>{console.log(food.id)
                 setFoodId(food.id)
                 }}
-                className={styles.itemButton}>View Recipe
+                className={styles.itemButton}>Ver Receita
             </button>
         </div>
     </div>

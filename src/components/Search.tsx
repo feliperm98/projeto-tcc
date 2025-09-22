@@ -1,23 +1,55 @@
 import { useState } from "react";
 import styles from "./search.module.css";
+import { translateTexts } from "./Translation";
 
-const URL = "https://api.spoonacular.com/recipes/complexSearch"
-const apiKey = "c1ff7152323a4667a464a6b0132defa4";
+const SPOONACULAR_URL = "https://api.spoonacular.com/recipes/complexSearch";
+const SPOONACULAR_API_KEY = import.meta.env.VITE_SPOONACULAR_API_KEY;
+
+const TRANSLATE_URL = `https://translation.googleapis.com/language/translate/v2`;
+const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
 const intoleranceOptions = [
-    { value: 'dairy', label: 'Dairy' },
-    { value: 'egg', label: 'Egg' },
-    { value: 'gluten', label: 'Gluten' },
-    { value: 'grain', label: 'Grain' },
-    { value: 'peanut', label: 'Peanut' },
-    { value: 'seafood', label: 'Seafood' },
-    { value: 'sesame', label: 'Sesame' },
-    { value: 'shellfish', label: 'Shellfish' },
-    { value: 'soy', label: 'Soy' },
-    { value: 'sulfite', label: 'Sulfite' },
-    { value: 'tree-nut', label: 'Tree Nut' },
-    { value: 'wheat', label: 'Wheat' }
+    { value: 'dairy', label: 'Leite' },
+    { value: 'egg', label: 'Ovo' },
+    { value: 'gluten', label: 'Glúten' },
+    { value: 'grain', label: 'Grãos' },
+    { value: 'peanut', label: 'Amendoim' },
+    { value: 'seafood', label: 'Frutos do mar' },
+    { value: 'sesame', label: 'Gergelim' },
+    { value: 'shellfish', label: 'Mariscos' },
+    { value: 'soy', label: 'Soja' },
+    { value: 'sulfite', label: 'Sulfito' },
+    { value: 'tree-nut', label: 'Nozes' },
+    { value: 'wheat', label: 'Trigo' }
 ];
+
+async function translateToEnglish(text: string): Promise<string> {
+    if (!GOOGLE_API_KEY || !text.trim()) {
+        return text;
+    }
+
+    try {
+        const response = await fetch(`${TRANSLATE_URL}?key=${GOOGLE_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                q: text,
+                target: 'en',
+                source: 'pt', 
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Translation to English failed');
+        }
+
+        const data = await response.json();
+        return data.data.translations[0].translatedText;
+    } catch (error) {
+        console.error("Translation to English failed:", error);
+        return text; 
+    }
+}
 
 export default function Search({ foodData, setFoodData }: { foodData: any; setFoodData: any }) {
 
@@ -28,7 +60,6 @@ export default function Search({ foodData, setFoodData }: { foodData: any; setFo
         intolerances: [] as string[],
     });
 
-    // 2. Generic handler to update the state object
     function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         const { name, value } = e.target;
         setSearchParams({ ...searchParams, [name]: value });
@@ -39,62 +70,87 @@ export default function Search({ foodData, setFoodData }: { foodData: any; setFo
         const { value, checked } = e.target;
         setSearchParams(prevParams => {
             const newIntolerances = checked
-                ? [...prevParams.intolerances, value] // Add to array if checked
-                : prevParams.intolerances.filter(item => item !== value); // Remove if unchecked
+                ? [...prevParams.intolerances, value]
+                : prevParams.intolerances.filter(item => item !== value);
             return { ...prevParams, intolerances: newIntolerances };
         });
     }
 
     async function searchRecipe() {
-        // 3. Build the query string dynamically
         const params = new URLSearchParams({
-            apiKey: apiKey,
+            apiKey: SPOONACULAR_API_KEY,
         });
 
-        // Append parameters only if they have a value
-        if (searchParams.query) params.append("query", searchParams.query);
-        if (searchParams.cuisine) params.append("cuisine", searchParams.cuisine);
+        const translatedQuery = await translateToEnglish(searchParams.query);
+        const translatedCuisine = await translateToEnglish(searchParams.cuisine);
+
+
+        params.append("number", "20");
+
+        if (translatedQuery) params.append("query", translatedQuery);
+        if (translatedCuisine) params.append("cuisine", translatedCuisine);
         if (searchParams.diet) params.append("diet", searchParams.diet);
         if (searchParams.intolerances.length > 0) {
             params.append("intolerances", searchParams.intolerances.join(","));
         }
 
-        const res = await fetch(`${URL}?${params.toString()}`);
+        const res = await fetch(`${SPOONACULAR_URL}?${params.toString()}`);
         const data = await res.json();
-        console.log(data.results);
-        setFoodData(data.results);
+        console.log(data);
+
+        if (data.results && data.results.length > 0) {   
+
+            const titlesToTranslate = data.results.map((recipe: any) => recipe.title);
+            
+            const translatedTitles = await translateTexts(titlesToTranslate);
+
+            const translatedRecipes = data.results.map((recipe: any, index: number) => ({
+                ...recipe,
+                title: translatedTitles[index],
+            }));
+
+            setFoodData(translatedRecipes);
+        } else {
+            setFoodData([]);
+        }
+    }
+
+        function handleKeyDown(e: React.KeyboardEvent) {
+        if (e.key === 'Enter') {
+            searchRecipe();
+        }
     }
 
     return (
         <div className={styles.searchContainer}>
             <input
                 className={styles.input}
-                name="query" // Add name attribute
+                name="query"
                 value={searchParams.query}
                 onChange={handleChange}
                 type="text"
-                placeholder="Search for a recipe..."
+                placeholder="Procure uma receita..."
+                onKeyDown={handleKeyDown}
             />
-            {/* Example for a 'cuisine' text input */}
             <input
                 className={styles.input}
                 name="cuisine"
                 value={searchParams.cuisine}
                 onChange={handleChange}
                 type="text"
-                placeholder="Cuisine (e.g., Italian)"
+                placeholder="Culinária (por exemplo, Italiana)"
+                onKeyDown={handleKeyDown}
             />
-            {/* Example for a 'diet' dropdown */}
             <select className={styles.input} name="diet" value={searchParams.diet} onChange={handleChange}>
-                <option value="">Select Diet</option>
-                <option value="vegetarian">Vegetarian</option>
-                <option value="vegan">Vegan</option>
-                <option value="glutenFree">Gluten Free</option>
-                <option value="pescetarian">Pescetarian</option>
+                <option value="">Selecione dieta</option>
+                <option value="vegetarian">Vegetariano</option>
+                <option value="vegan">Vegano</option>
+                <option value="glutenFree">Sem glúten</option>
+                <option value="pescetarian">Pescetariano</option>
             </select>
 
             <div className={styles.checkboxContainer}>
-                <h4 className={styles.checkboxTitle}>Intolerances</h4>
+                <h4 className={styles.checkboxTitle}>Intolerâncias</h4>
                 <div className={styles.checkboxGrid}>
                     {intoleranceOptions.map(option => (
                         <div key={option.value} className={styles.checkboxItem}>
@@ -113,7 +169,7 @@ export default function Search({ foodData, setFoodData }: { foodData: any; setFo
 
 
             <button className={styles.button} onClick={searchRecipe}>
-                Search
+                Buscar
             </button>
         </div>
     );

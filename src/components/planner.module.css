@@ -41,6 +41,11 @@
     background-color: #2E8B57;
 }
 
+.buttonGroup {
+    display: flex;
+    gap: 10px;
+}
+
 .mealPlanContainer {
     display: flex;
     flex-wrap: wrap;
