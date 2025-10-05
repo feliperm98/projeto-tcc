@@ -51,7 +51,7 @@ async function translateToEnglish(text: string): Promise<string> {
     }
 }
 
-export default function Search({ foodData, setFoodData }: { foodData: any; setFoodData: any }) {
+export default function Search({ setFoodData }: { foodData: any; setFoodData: any }) {
 
     const [searchParams, setSearchParams] = useState({
         query: "",
